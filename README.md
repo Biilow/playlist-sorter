@@ -7,6 +7,10 @@ Use it at <https://biilow.github.io/playlist-sorter/>, or add `?demo` to try a s
 
 If you reorder a playlist and Spotify still shows the old order, close and reopen the Spotify app.
 
+## Invite friends
+
+Add a friend's Spotify email under User Management in your Spotify app, then send them the link from **Invite a friend** in the sidebar. They connect with one click and don't need their own app. Spotify allows 5 people per app in Development Mode. The link contains your Client ID, which is a public identifier and not a secret.
+
 ## Privacy
 
 - There is no server, database, account system, analytics or tracking.

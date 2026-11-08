@@ -21,6 +21,7 @@
         <h1>Sort a playlist by the colour of its album covers.</h1>
         <p class="lead">White first, through the rainbow, down to black. Or sort by artist, BPM, key, mood or a full listening arc.</p>
 
+        <p id="invite-note" class="invite-note" hidden>You’ve been invited to use this app. Connect your Spotify account to sort your playlists.</p>
         <div id="quick-connect" class="quick-connect" hidden>
           <button type="button" id="quick-button" class="primary">Connect Spotify</button>
           <button type="button" id="change-app" class="plain">Use a different Client ID</button>
@@ -101,6 +102,11 @@
         <ul id="playlists" class="playlists"></ul>
         <div class="side-foot">
           <p>Only playlists you own or collaborate on can be sorted.</p>
+          <details id="invite" class="invite" hidden>
+            <summary>Invite a friend</summary>
+            <p>Add their Spotify email in <a id="invite-users" target="_blank" rel="noreferrer">User Management</a>, then send them the link. Spotify allows 5 people per app.</p>
+            <button type="button" id="copy-invite">Copy invite link</button>
+          </details>
           <p class="account"><span id="account"></span> <button type="button" id="logout" class="plain">Log out</button></p>
         </div>
       </nav>

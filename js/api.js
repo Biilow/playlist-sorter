@@ -35,7 +35,8 @@ async function request(path, { method = 'GET', body } = {}) {
     }
     if (!res.ok) {
       const detail = await res.json().catch(() => null);
-      throw new Error(`Spotify returned an error (${res.status}): ${detail?.error?.message || res.statusText || 'no details given'}.`);
+      const message = `Spotify returned an error (${res.status}): ${detail?.error?.message || res.statusText || 'no details given'}.`;
+      throw Object.assign(new Error(message), { status: res.status });
     }
     return res.status === 204 ? null : res.json();
   }

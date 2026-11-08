@@ -136,8 +136,28 @@ button.plain:hover:not(:disabled) {
   margin-top: 40px;
 }
 
-.guide-intro {
+.guide-intro,
+.invite-note {
   margin-top: 40px;
+}
+
+.invite-note + .quick-connect {
+  margin-top: 16px;
+}
+
+.invite {
+  margin-top: 8px;
+}
+
+.invite summary {
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.invite p,
+.invite button {
+  margin-top: 8px;
 }
 
 .steps {

@@ -11,6 +11,7 @@ const CLIENT_KEY = 'sorter.clientId';
 const TOKEN_KEY = 'sorter.token';
 const VERIFIER_KEY = 'sorter.verifier';
 const STATE_KEY = 'sorter.state';
+const INVITED_KEY = 'sorter.invitedTo';
 
 // The page's own folder, so it works at the root of a site or under a project path.
 const redirectUri = () => new URL('./', location.href).href;
@@ -20,6 +21,9 @@ export const getClientId = () => localStorage.getItem(CLIENT_KEY) || '';
 
 // Accepts the ID on its own, or the whole dashboard address that contains it.
 export const findClientId = (text) => text.match(/(?<![0-9a-z])[0-9a-f]{32}(?![0-9a-z])/i)?.[0] ?? null;
+
+// True when this browser is using someone else's app through an invite link.
+export const wasInvited = () => localStorage.getItem(INVITED_KEY) === getClientId();
 
 const base64Url = (bytes) =>
   btoa(String.fromCharCode(...new Uint8Array(bytes)))
@@ -60,8 +64,9 @@ async function requestToken(params) {
   return body;
 }
 
-export async function startLogin(clientId) {
+export async function startLogin(clientId, invited = false) {
   localStorage.setItem(CLIENT_KEY, clientId);
+  if (invited) localStorage.setItem(INVITED_KEY, clientId);
   const verifier = randomString();
   const state = randomString();
   sessionStorage.setItem(VERIFIER_KEY, verifier);

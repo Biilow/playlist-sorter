@@ -1,5 +1,5 @@
 import { createSpotifyApi } from './api.js';
-import { findClientId, finishLogin, getClientId, getRedirectUri, hasSession, logout, startLogin } from './auth.js';
+import { findClientId, finishLogin, getClientId, getRedirectUri, hasSession, logout, startLogin, wasInvited } from './auth.js';
 import { dominantColour } from './colour.js';
 import { createDemoApi } from './demo.js';
 import { camelot, keyName, moodName } from './music.js';
@@ -24,6 +24,7 @@ const isDemo = new URLSearchParams(location.search).has('demo');
 const api = isDemo ? createDemoApi() : createSpotifyApi();
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+const NOT_ALLOWED = 'Spotify didn’t allow this account. If you were invited, ask for your Spotify email to be added to the app. If it’s your own app, check that the account has Premium.';
 const SAMPLE_SIZE = 40; // covers are shrunk to this many pixels square before reading
 const COVER_WORKERS = 8;
 
@@ -445,6 +446,9 @@ async function showApp() {
   $('setup').hidden = true;
   $('app').hidden = false;
   $('account').textContent = state.me.display_name || state.me.id;
+  const canInvite = !isDemo && !wasInvited();
+  $('invite').hidden = !canInvite;
+  if (canInvite) $('invite-users').href = `https://developer.spotify.com/dashboard/${getClientId()}/users`;
 
   const playlists = await api.playlists(state.me.id);
   const list = $('playlists');
@@ -521,15 +525,19 @@ function playBands() {
   }, 700);
 }
 
+const invitedClientId = () => findClientId(new URLSearchParams(location.search).get('app') ?? '');
+
 function showSetup(message) {
   $('app').hidden = true;
   $('setup').hidden = false;
   $('redirect-uri').textContent = getRedirectUri();
-  const saved = getClientId();
-  $('client-id').value = saved;
-  // Someone who has done this before only needs the one button.
-  $('guide').hidden = Boolean(saved);
-  $('quick-connect').hidden = !saved;
+  const invited = invitedClientId();
+  const appId = invited ?? getClientId();
+  $('client-id').value = appId;
+  // Someone invited, or who has done this before, only needs the one button.
+  $('guide').hidden = Boolean(appId);
+  $('quick-connect').hidden = !appId;
+  $('invite-note').hidden = !invited;
   $('setup-error').textContent = message || '';
   if (!$('bands').children.length) playBands();
 }
@@ -556,7 +564,13 @@ function wireEvents() {
       button.textContent = 'Copied';
     });
   });
-  $('quick-button').addEventListener('click', () => startLogin(getClientId()));
+  $('quick-button').addEventListener('click', () => {
+    startLogin(findClientId($('client-id').value), Boolean(invitedClientId()));
+  });
+  $('copy-invite').addEventListener('click', async () => {
+    await navigator.clipboard.writeText(`${getRedirectUri()}?app=${getClientId()}`);
+    $('copy-invite').textContent = 'Copied';
+  });
   $('change-app').addEventListener('click', () => {
     $('quick-connect').hidden = true;
     $('guide').hidden = false;
@@ -594,7 +608,7 @@ async function start() {
     await showApp();
   } catch (err) {
     logout();
-    showSetup(err.message);
+    showSetup(err.status === 403 ? NOT_ALLOWED : err.message);
   }
 }
 
