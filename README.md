@@ -5,6 +5,8 @@ It runs entirely in your browser. There is no server and no client secret.
 
 Use it at <https://biilow.github.io/playlist-sorter/>, or add `?demo` to try a sample playlist without logging in.
 
+If you reorder a playlist and Spotify still shows the old order, close and reopen the Spotify app.
+
 ## Privacy
 
 - There is no server, database, account system, analytics or tracking.

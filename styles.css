@@ -128,9 +128,82 @@ button.plain:hover:not(:disabled) {
   font-size: 1.25rem;
 }
 
+.quick-connect {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin-top: 40px;
+}
+
+.guide-intro {
+  margin-top: 40px;
+}
+
 .steps {
-  margin-top: 48px;
+  margin-top: 24px;
   counter-reset: step;
+}
+
+.steps h2 {
+  margin: 0 0 4px;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.fields {
+  margin: 12px 0 0;
+}
+
+.fields > div {
+  margin-top: 10px;
+}
+
+.fields dt {
+  font-weight: 500;
+}
+
+.fields dd {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 4px 0 0;
+}
+
+.fields code {
+  background: var(--white);
+  padding: 8px 10px;
+  font-family: inherit;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+/* Match the numbered circles drawn on the screenshots. */
+.mark {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  background: #d6005f;
+  color: var(--white);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.5em;
+  text-align: center;
+}
+
+.tick-line {
+  margin-top: 16px;
+}
+
+.shot {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 14px;
+  border: 2px solid var(--black);
 }
 
 .steps > li {
@@ -148,22 +221,6 @@ button.plain:hover:not(:disabled) {
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 1.2;
-}
-
-.uri {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 8px;
-  flex-wrap: wrap;
-}
-
-.uri code {
-  background: var(--white);
-  padding: 8px 10px;
-  font-family: inherit;
-  font-weight: 500;
-  overflow-wrap: anywhere;
 }
 
 #connect label {

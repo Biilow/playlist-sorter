@@ -1,5 +1,5 @@
 import { createSpotifyApi } from './api.js';
-import { finishLogin, getClientId, getRedirectUri, hasSession, logout, startLogin } from './auth.js';
+import { findClientId, finishLogin, getClientId, getRedirectUri, hasSession, logout, startLogin } from './auth.js';
 import { dominantColour } from './colour.js';
 import { createDemoApi } from './demo.js';
 import { camelot, keyName, moodName } from './music.js';
@@ -406,7 +406,7 @@ function reorder() {
     await moveSongs(playlist, target);
     await confirmSaved(playlist);
     playlist.undo = before;
-    setStatus(`Reordered “${playlist.name}”${sortName ? ` by ${sortName}` : ''}. Undo is available until you leave this page.`, {
+    setStatus(`Reordered “${playlist.name}”${sortName ? ` by ${sortName}` : ''}. If Spotify still shows the old order, close and reopen the Spotify app. Undo is available until you leave this page.`, {
       label: 'Undo',
       run: undo,
     });
@@ -525,7 +525,11 @@ function showSetup(message) {
   $('app').hidden = true;
   $('setup').hidden = false;
   $('redirect-uri').textContent = getRedirectUri();
-  $('client-id').value = getClientId();
+  const saved = getClientId();
+  $('client-id').value = saved;
+  // Someone who has done this before only needs the one button.
+  $('guide').hidden = Boolean(saved);
+  $('quick-connect').hidden = !saved;
   $('setup-error').textContent = message || '';
   if (!$('bands').children.length) playBands();
 }
@@ -546,15 +550,22 @@ function wireEvents() {
     logout();
     location.reload();
   });
-  $('copy-uri').addEventListener('click', async () => {
-    await navigator.clipboard.writeText(getRedirectUri());
-    $('copy-uri').textContent = 'Copied';
+  document.querySelectorAll('[data-copy]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      await navigator.clipboard.writeText($(button.dataset.copy).textContent);
+      button.textContent = 'Copied';
+    });
+  });
+  $('quick-button').addEventListener('click', () => startLogin(getClientId()));
+  $('change-app').addEventListener('click', () => {
+    $('quick-connect').hidden = true;
+    $('guide').hidden = false;
   });
   $('connect').addEventListener('submit', (event) => {
     event.preventDefault();
-    const clientId = $('client-id').value.trim();
-    if (!/^[0-9a-f]{32}$/i.test(clientId)) {
-      $('setup-error').textContent = 'A Client ID is 32 letters and numbers. Copy it from your app’s Basic Information page.';
+    const clientId = findClientId($('client-id').value);
+    if (!clientId) {
+      $('setup-error').textContent = 'That doesn’t look like a Client ID. It’s 32 letters and numbers, at the top of your app’s page on Spotify.';
       return;
     }
     startLogin(clientId);

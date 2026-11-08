@@ -18,6 +18,9 @@ const redirectUri = () => new URL('./', location.href).href;
 export const getRedirectUri = redirectUri;
 export const getClientId = () => localStorage.getItem(CLIENT_KEY) || '';
 
+// Accepts the ID on its own, or the whole dashboard address that contains it.
+export const findClientId = (text) => text.match(/(?<![0-9a-z])[0-9a-f]{32}(?![0-9a-z])/i)?.[0] ?? null;
+
 const base64Url = (bytes) =>
   btoa(String.fromCharCode(...new Uint8Array(bytes)))
     .replace(/\+/g, '-')

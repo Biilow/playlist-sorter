@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data: https://*.scdn.co https://*.spotifycdn.com; connect-src https://api.spotify.com https://accounts.spotify.com https://api.reccobeats.com; base-uri 'none'; form-action 'none'"
+      content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.scdn.co https://*.spotifycdn.com; connect-src https://api.spotify.com https://accounts.spotify.com https://api.reccobeats.com; base-uri 'none'; form-action 'none'"
     />
     <meta name="referrer" content="no-referrer" />
     <title>Playlist Sorter</title>
@@ -19,33 +19,70 @@
     <main id="setup" hidden>
       <div class="setup-copy">
         <h1>Sort a playlist by the colour of its album covers.</h1>
-        <p class="lead">White first, through the rainbow, down to black. Or group it by artist.</p>
+        <p class="lead">White first, through the rainbow, down to black. Or sort by artist, BPM, key, mood or a full listening arc.</p>
 
-        <ol class="steps">
-          <li>
-            Create an app on the
-            <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noreferrer">Spotify developer dashboard</a>
-            and tick Web API. The account that owns the app needs Premium.
-          </li>
-          <li>
-            Add this as the app’s redirect URI:
-            <span class="uri">
-              <code id="redirect-uri"></code>
-              <button type="button" id="copy-uri">Copy</button>
-            </span>
-          </li>
-          <li>
-            <form id="connect">
-              <label for="client-id">Paste the app’s Client ID</label>
-              <span class="connect-line">
-                <input id="client-id" autocomplete="off" spellcheck="false" />
-                <button type="submit" class="primary">Connect Spotify</button>
-              </span>
-            </form>
-          </li>
-        </ol>
+        <div id="quick-connect" class="quick-connect" hidden>
+          <button type="button" id="quick-button" class="primary">Connect Spotify</button>
+          <button type="button" id="change-app" class="plain">Use a different Client ID</button>
+        </div>
+
+        <div id="guide">
+          <p class="guide-intro">
+            Spotify asks each person to create their own free developer app. It takes about two minutes, and you only do it once.
+            Your Spotify account needs Premium.
+          </p>
+
+          <ol class="steps">
+            <li>
+              <h2>Open Spotify’s form</h2>
+              <p>
+                <a href="https://developer.spotify.com/dashboard/create" target="_blank" rel="noreferrer">Open the Create app page</a>
+                in a new tab and log in with your Spotify account.
+              </p>
+            </li>
+            <li>
+              <h2>Fill it in</h2>
+              <p>Copy each of these into the matching box.</p>
+              <dl class="fields">
+                <div>
+                  <dt><span class="mark">1</span> App name</dt>
+                  <dd><code id="copy-name">Playlist Sorter</code><button type="button" data-copy="copy-name">Copy</button></dd>
+                </div>
+                <div>
+                  <dt><span class="mark">2</span> App description</dt>
+                  <dd><code id="copy-description">Sorts my playlists</code><button type="button" data-copy="copy-description">Copy</button></dd>
+                </div>
+                <div>
+                  <dt><span class="mark">3</span> Redirect URI, then press Add</dt>
+                  <dd><code id="redirect-uri"></code><button type="button" data-copy="redirect-uri">Copy</button></dd>
+                </div>
+              </dl>
+              <p class="tick-line">
+                Tick <span class="mark">4</span> Web API and <span class="mark">5</span> the terms, then press <span class="mark">6</span> Save.
+              </p>
+              <img class="shot" src="guide/create-app.jpg" width="796" height="825" loading="lazy" alt="Spotify’s Create app form with numbered boxes on App name, App description, Redirect URIs, the Web API checkbox, the terms checkbox and the Save button." />
+            </li>
+            <li>
+              <h2>Copy your Client ID</h2>
+              <p>Spotify now shows your new app. Press the copy icon next to the Client ID, in the box at the top. You never need the client secret, so keep that private.</p>
+              <img class="shot" src="guide/client-id.jpg" width="796" height="325" loading="lazy" alt="Spotify’s app page with a box around the Client ID and its copy icon, at the top left." />
+            </li>
+            <li>
+              <h2>Connect</h2>
+              <form id="connect">
+                <label for="client-id">Paste your Client ID, or the address of that Spotify page</label>
+                <span class="connect-line">
+                  <input id="client-id" autocomplete="off" spellcheck="false" />
+                  <button type="submit" class="primary">Connect Spotify</button>
+                </span>
+              </form>
+            </li>
+          </ol>
+        </div>
+
         <p id="setup-error" class="error" role="alert"></p>
         <p><a href="?demo">Try it on a sample playlist first</a></p>
+        <p class="privacy">If you reorder a playlist and Spotify still shows the old order, close and reopen the Spotify app.</p>
         <p class="privacy">
           This site has no server, accounts or tracking. Your Spotify login stays in this browser tab and ends when you close it.
           Only song IDs are sent to ReccoBeats, for BPM, key and mood.
