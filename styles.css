@@ -1,0 +1,531 @@
+/* Neutral grey on purpose: it is the one background where white covers and
+   black covers both stand out, and it adds no colour cast to the rows. */
+:root {
+  --booth: #bababa;
+  --booth-light: #d2d2d2;
+  --booth-dark: #8c8c8c;
+  --black: #000;
+  --white: #fff;
+  --row: 56px;
+  --gutter: clamp(16px, 3vw, 40px);
+  font-family: 'Familjen Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--black);
+  background: var(--booth);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  background: var(--booth);
+}
+
+h1,
+p,
+ol,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  border: 2px solid var(--black);
+  background: transparent;
+  padding: 8px 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+button:hover:not(:disabled) {
+  background: var(--booth-light);
+}
+
+button:disabled {
+  border-color: var(--booth-dark);
+  color: #5c5c5c;
+  cursor: default;
+}
+
+button.primary {
+  background: var(--black);
+  color: var(--white);
+}
+
+button.primary:hover:not(:disabled) {
+  background: #333;
+}
+
+button.primary:disabled {
+  background: var(--booth-dark);
+  color: var(--booth-light);
+}
+
+button.plain {
+  border: 0;
+  padding: 0;
+  font-weight: 400;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+button.plain:hover:not(:disabled) {
+  background: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--black);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--white);
+}
+
+/* Setup */
+
+#setup {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  min-height: 100vh;
+}
+
+.setup-copy {
+  padding: clamp(32px, 6vw, 88px) var(--gutter);
+  max-width: 44rem;
+}
+
+.setup-copy h1 {
+  font-size: clamp(2.5rem, 5.4vw, 4.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+.lead {
+  margin-top: 20px;
+  font-size: 1.25rem;
+}
+
+.steps {
+  margin-top: 48px;
+  counter-reset: step;
+}
+
+.steps > li {
+  counter-increment: step;
+  position: relative;
+  padding: 14px 0 14px 44px;
+  border-top: 2px solid var(--black);
+}
+
+.steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 12px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.uri {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.uri code {
+  background: var(--white);
+  padding: 8px 10px;
+  font-family: inherit;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+#connect label {
+  display: block;
+}
+
+.connect-line {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.connect-line input,
+input[type='search'] {
+  min-width: 0;
+  border: 2px solid var(--black);
+  border-radius: 0;
+  background: var(--white);
+  padding: 8px 10px;
+}
+
+.connect-line input {
+  flex: 1 1 16rem;
+}
+
+input[type='search'] {
+  appearance: none;
+}
+
+input[type='search']::placeholder {
+  color: #5c5c5c;
+}
+
+input[type='search']:disabled {
+  border-color: var(--booth-dark);
+  background: var(--booth-light);
+}
+
+.privacy {
+  margin-top: 24px;
+  font-size: 0.875rem;
+  max-width: 34rem;
+}
+
+.side-search {
+  padding: 10px;
+  border-bottom: 2px solid var(--black);
+}
+
+.side-search input {
+  width: 100%;
+}
+
+.search-count {
+  font-size: 0.875rem;
+}
+
+.search-count:empty {
+  display: none;
+}
+
+.side-search .search-count {
+  margin-top: 8px;
+}
+
+.song-search {
+  flex: 1 0 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.song-search input {
+  flex: 0 1 22rem;
+}
+
+.error {
+  font-weight: 700;
+  min-height: 1.4em;
+  margin: 12px 0;
+}
+
+.bands {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.bands > div {
+  flex: 1;
+}
+
+/* App */
+
+.app {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.side {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  border-right: 2px solid var(--black);
+}
+
+.brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  padding: 18px 16px;
+  border-bottom: 2px solid var(--black);
+}
+
+.playlists {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.playlists button {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 6px 16px 6px 6px;
+  border: 0;
+  text-align: left;
+  font-weight: 400;
+}
+
+.playlists button:disabled {
+  color: inherit;
+}
+
+.playlists button[aria-current] {
+  background: var(--black);
+  color: var(--white);
+}
+
+.playlists img {
+  width: 40px;
+  height: 40px;
+  display: block;
+  object-fit: cover;
+  background: var(--booth-dark);
+}
+
+.playlists .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.count {
+  font-variant-numeric: tabular-nums;
+}
+
+.side-foot {
+  padding: 12px 16px;
+  border-top: 2px solid var(--black);
+  font-size: 0.875rem;
+}
+
+.account {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.empty {
+  padding: var(--gutter);
+  font-size: 1.25rem;
+}
+
+.main h1 {
+  font-size: clamp(2rem, 4.4vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  padding: 24px var(--gutter) 16px;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px var(--gutter);
+  background: var(--booth);
+  border-top: 2px solid var(--black);
+  border-bottom: 2px solid var(--black);
+}
+
+.views,
+.actions {
+  display: flex;
+}
+
+/* Buttons overlap by one border width, so wrapped rows still look joined. */
+.views {
+  flex-wrap: wrap;
+  padding: 0 2px 2px 0;
+}
+
+.views button {
+  margin: 0 -2px -2px 0;
+}
+
+.views button[aria-pressed='true'] {
+  background: var(--black);
+  color: var(--white);
+}
+
+.views button[aria-pressed='true']:disabled {
+  border-color: var(--black);
+}
+
+.actions {
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.status {
+  flex: 1 0 100%;
+  min-height: 1.4em;
+  font-size: 0.875rem;
+}
+
+.status button {
+  padding: 0;
+  border: 0;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.status button:hover:not(:disabled) {
+  background: none;
+}
+
+.status a {
+  font-weight: 700;
+}
+
+/* The song list is the picture: each row wears its cover's colour. */
+
+.row {
+  --paint: var(--booth-light);
+  --ink: var(--black);
+  display: grid;
+  grid-template-columns: var(--row) minmax(0, 3fr) minmax(0, 2fr) 3.5rem;
+  gap: 14px;
+  align-items: center;
+  height: var(--row);
+  background: var(--paint);
+  color: var(--ink);
+  content-visibility: auto;
+  contain-intrinsic-size: auto var(--row);
+  transition: background-color 0.3s;
+}
+
+.art {
+  width: var(--row);
+  height: var(--row);
+  display: block;
+  object-fit: cover;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.title,
+.artist,
+.album {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title {
+  font-weight: 700;
+}
+
+.artist,
+.album {
+  font-size: 0.875rem;
+}
+
+.num {
+  text-align: right;
+  padding-right: var(--gutter);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 860px) {
+  #setup {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bands {
+    position: static;
+    order: -1;
+    height: 132px;
+    flex-direction: row;
+  }
+
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .side {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 2px solid var(--black);
+  }
+
+  .playlists {
+    max-height: 196px;
+  }
+
+  .row {
+    grid-template-columns: var(--row) minmax(0, 1fr) 3rem;
+  }
+
+  .album {
+    display: none;
+  }
+
+  .tracks.reading .row {
+    grid-template-columns: var(--row) minmax(0, 1fr) auto 3rem;
+  }
+
+  .tracks.reading .album {
+    display: block;
+  }
+
+  .actions,
+  .actions button {
+    flex: 1 1 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
+}

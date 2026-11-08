@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data: https://*.scdn.co https://*.spotifycdn.com; connect-src https://api.spotify.com https://accounts.spotify.com https://api.reccobeats.com; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="referrer" content="no-referrer" />
+    <title>Playlist Sorter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="js/app.js"></script>
+  </head>
+  <body>
+    <main id="setup" hidden>
+      <div class="setup-copy">
+        <h1>Sort a playlist by the colour of its album covers.</h1>
+        <p class="lead">White first, through the rainbow, down to black. Or group it by artist.</p>
+
+        <ol class="steps">
+          <li>
+            Create an app on the
+            <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noreferrer">Spotify developer dashboard</a>
+            and tick Web API. The account that owns the app needs Premium.
+          </li>
+          <li>
+            Add this as the app’s redirect URI:
+            <span class="uri">
+              <code id="redirect-uri"></code>
+              <button type="button" id="copy-uri">Copy</button>
+            </span>
+          </li>
+          <li>
+            <form id="connect">
+              <label for="client-id">Paste the app’s Client ID</label>
+              <span class="connect-line">
+                <input id="client-id" autocomplete="off" spellcheck="false" />
+                <button type="submit" class="primary">Connect Spotify</button>
+              </span>
+            </form>
+          </li>
+        </ol>
+        <p id="setup-error" class="error" role="alert"></p>
+        <p><a href="?demo">Try it on a sample playlist first</a></p>
+        <p class="privacy">
+          This site has no server, accounts or tracking. Your Spotify login stays in this browser tab and ends when you close it.
+          Only song IDs are sent to ReccoBeats, for BPM, key and mood.
+        </p>
+      </div>
+      <div id="bands" class="bands" aria-hidden="true"></div>
+    </main>
+
+    <div id="app" class="app" hidden>
+      <nav class="side" aria-label="Your playlists">
+        <p class="brand">Playlist Sorter</p>
+        <div class="side-search">
+          <input type="search" id="playlist-search" placeholder="Search playlists" aria-label="Search playlists" autocomplete="off" />
+          <p id="playlist-count" class="search-count" role="status"></p>
+        </div>
+        <ul id="playlists" class="playlists"></ul>
+        <div class="side-foot">
+          <p>Only playlists you own or collaborate on can be sorted.</p>
+          <p class="account"><span id="account"></span> <button type="button" id="logout" class="plain">Log out</button></p>
+        </div>
+      </nav>
+
+      <main class="main">
+        <p id="empty" class="empty">Loading your playlists</p>
+        <section id="workspace" hidden>
+          <h1 id="playlist-name"></h1>
+          <div class="toolbar">
+            <div class="views" role="group" aria-label="Sort by">
+              <button type="button" data-view="current">Current</button>
+              <button type="button" data-view="colour" data-needs="covers">Colour</button>
+              <button type="button" data-view="journey" data-needs="covers">Colour journey</button>
+              <button type="button" data-view="artist">Artist</button>
+              <button type="button" data-view="bpm" data-needs="audio">BPM</button>
+              <button type="button" data-view="key" data-needs="audio">Key</button>
+              <button type="button" data-view="mood" data-needs="audio">Mood</button>
+              <button type="button" data-view="transitions" data-needs="audio">Best transitions</button>
+              <button type="button" data-view="aux" data-needs="audio">Aux</button>
+            </div>
+            <div class="actions">
+              <button type="button" id="copy">Save as new playlist</button>
+              <button type="button" id="reorder" class="primary">Reorder playlist</button>
+            </div>
+            <div class="song-search">
+              <input type="search" id="song-search" placeholder="Search songs, artists or albums" aria-label="Search songs, artists or albums" autocomplete="off" />
+              <p id="song-count" class="search-count" role="status"></p>
+            </div>
+            <p id="status" class="status" role="status"></p>
+          </div>
+          <ol id="tracks" class="tracks"></ol>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
